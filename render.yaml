@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: aquachiloe-ms-ambiental
+    runtime: docker
+    plan: free
+    dockerContext: ./ms-ambiental/ms-ambiental
+    dockerfilePath: ./ms-ambiental/ms-ambiental/Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: default
