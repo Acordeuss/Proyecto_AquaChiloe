@@ -5,7 +5,10 @@ import com.example.ms_biomasa.repository.BiomasaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -18,26 +21,32 @@ public class BiomasaService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${app.ms-lotes.url}")
+    private String lotesUrl;
+
     public Biomasa registrarMuestreo(Biomasa biomasa) {
-        log.info("Sincronizando población con ms-lotes para jaula: " + biomasa.getJaulaId());
+        log.info("Consultando cantidad de peces en ms-lotes para jaula: " + biomasa.getJaulaId());
 
         try {
-            String url = "http://localhost:8082/api/v1/lotes/cantidad-peces/" + biomasa.getJaulaId();
+            String url = lotesUrl + "/api/v1/lotes/cantidad-peces/" + biomasa.getJaulaId();
             Integer cantidadOficial = restTemplate.getForObject(url, Integer.class);
 
             if (cantidadOficial == null || cantidadOficial == 0) {
-                log.warn("Sin respuesta de stock oficial. Registrando población en 0.");
                 biomasa.setCantidadPeces(0);
             } else {
                 biomasa.setCantidadPeces(cantidadOficial);
             }
-
-        } catch (Exception e) {
-            log.error("Fallo de comunicación distribuida. Fallback activo: " + e.getMessage());
+        } catch (RestClientException e) {
+            log.error("No se pudo comunicar con ms-lotes. Se guarda cantidad en 0: " + e.getMessage());
             biomasa.setCantidadPeces(0);
         }
 
-        return repository.save(biomasa);
+        try {
+            return repository.save(biomasa);
+        } catch (DataAccessException e) {
+            log.error("Error al guardar biomasa en la base de datos: " + e.getMessage());
+            throw new RuntimeException("No se pudo guardar la biomasa en la base de datos.");
+        }
     }
 
     public Double calcularBiomasaTotalKilos(Long jaulaId) {

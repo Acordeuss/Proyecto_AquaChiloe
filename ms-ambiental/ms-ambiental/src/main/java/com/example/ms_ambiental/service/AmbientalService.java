@@ -5,6 +5,7 @@ import com.example.ms_ambiental.repository.AmbientalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,22 +16,31 @@ public class AmbientalService {
     private AmbientalRepository repository;
 
     public LecturaAmbiental registrarLectura(LecturaAmbiental lectura) {
-        log.info("Evaluando telemetría ambiental del sensor: " + lectura.getSensorId());
+        log.info("Evaluando lectura ambiental del sensor: " + lectura.getSensorId());
 
-        // Regla R5: Oxígeno por debajo del umbral crítico (6.0 mg/L)
         if (lectura.getOxigeno() < 6.0) {
-            log.warn("¡ALERTA CRÍTICA (R5)! Oxígeno disuelto en niveles peligrosos: " + lectura.getOxigeno() + " mg/L en Centro: " + lectura.getCentroId());
+            log.warn("Alerta critica por oxigeno bajo: " + lectura.getOxigeno());
             lectura.setAlertaCritica(true);
         }
 
-        return repository.save(lectura);
+        try {
+            return repository.save(lectura);
+        } catch (DataAccessException e) {
+            log.error("Error al guardar lectura ambiental en la base de datos: " + e.getMessage());
+            throw new RuntimeException("No se pudo guardar la lectura ambiental en la base de datos.");
+        }
     }
 
     public boolean hayAlertaActiva(Long centroId) {
-        return repository.findByCentroIdOrderByFechaLecturaDesc(centroId)
-                .stream()
-                .findFirst()
-                .map(LecturaAmbiental::getAlertaCritica)
-                .orElse(false);
+        try {
+            return repository.findByCentroIdOrderByFechaLecturaDesc(centroId)
+                    .stream()
+                    .findFirst()
+                    .map(LecturaAmbiental::getAlertaCritica)
+                    .orElse(false);
+        } catch (DataAccessException e) {
+            log.error("Error al consultar alertas en la base de datos: " + e.getMessage());
+            return false;
+        }
     }
 }

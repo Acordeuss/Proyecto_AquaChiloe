@@ -5,6 +5,7 @@ import com.example.ms_personal.repository.TrabajadorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,12 +17,24 @@ public class PersonalService {
     private TrabajadorRepository repository;
 
     public List<Trabajador> listarTodos() {
-        log.info("Extrayendo nómina general de trabajadores activos en planta.");
-        return repository.findAll();
+        log.info("Listando trabajadores.");
+
+        try {
+            return repository.findAll();
+        } catch (DataAccessException e) {
+            log.error("Error al consultar trabajadores en la base de datos: " + e.getMessage());
+            throw new RuntimeException("No se pudo consultar la base de datos de personal.");
+        }
     }
 
-    public Trabajador registrarTrabajador(Trabajador t) {
-        log.info("Registrando alta de colaborador. RUT: " + t.getRut() + " en turno: " + t.getTurno());
-        return repository.save(t);
+    public Trabajador registrarTrabajador(Trabajador trabajador) {
+        log.info("Registrando trabajador. RUT: " + trabajador.getRut());
+
+        try {
+            return repository.save(trabajador);
+        } catch (DataAccessException e) {
+            log.error("Error al guardar trabajador en la base de datos: " + e.getMessage());
+            throw new RuntimeException("No se pudo guardar el trabajador en la base de datos.");
+        }
     }
 }

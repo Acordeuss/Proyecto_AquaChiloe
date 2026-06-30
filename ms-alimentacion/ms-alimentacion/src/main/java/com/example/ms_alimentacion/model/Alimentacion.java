@@ -24,11 +24,17 @@ public class Alimentacion {
     public Alimentacion() {}
 
     public Long getId() { return id; }
+
     public void setId(Long id) { this.id = id; }
+
     public Long getJaulaId() { return jaulaId; }
+
     public void setJaulaId(Long jaulaId) { this.jaulaId = jaulaId; }
+
     public Double getCantidadAlimentoKilos() { return cantidadAlimentoKilos; }
+
     public void setCantidadAlimentoKilos(Double cantidadAlimentoKilos) { this.cantidadAlimentoKilos = cantidadAlimentoKilos; }
     public LocalDate getFechaRegistro() { return fechaRegistro; }
+
     public void setFechaRegistro(LocalDate fechaRegistro) { this.fechaRegistro = fechaRegistro; }
 }

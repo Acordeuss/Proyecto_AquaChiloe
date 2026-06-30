@@ -5,7 +5,10 @@ import com.example.ms_alimentacion.repository.AlimentacionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -18,30 +21,37 @@ public class AlimentacionService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${app.ms-biomasa.url}")
+    private String biomasaUrl;
+
     public Alimentacion registrarAlimentacion(Alimentacion alimentacion) {
-        log.info("Validando Regla R3 (TCA vs Biomasa) para jaula ID: " + alimentacion.getJaulaId());
+        log.info("Validando alimentacion para jaula ID: " + alimentacion.getJaulaId());
+
+        String url = biomasaUrl + "/api/v1/biomasa/total/" + alimentacion.getJaulaId();
+        Double biomasaTotal;
 
         try {
-            String url = "http://localhost:8081/api/v1/biomasa/total/" + alimentacion.getJaulaId();
-            Double biomasaTotal = restTemplate.getForObject(url, Double.class);
+            biomasaTotal = restTemplate.getForObject(url, Double.class);
+        } catch (RestClientException e) {
+            log.error("Fallo al validar alimentacion con ms-biomasa: " + e.getMessage());
+            throw new RuntimeException("No se pudo comunicar con ms-biomasa para validar la biomasa.");
+        }
 
-            if (biomasaTotal == null || biomasaTotal == 0) {
-                log.error("Denegado: No hay cálculos de biomasa para la jaula " + alimentacion.getJaulaId());
-                throw new RuntimeException("No se puede alimentar una jaula sin datos de biomasa.");
-            }
+        if (biomasaTotal == null || biomasaTotal == 0) {
+            throw new RuntimeException("No se puede alimentar una jaula sin datos de biomasa.");
+        }
 
-            Double limiteMaximo = biomasaTotal * 0.03;
+        Double limiteMaximo = biomasaTotal * 0.03;
 
-            if (alimentacion.getCantidadAlimentoKilos() > limiteMaximo) {
-                log.warn("Violación R3: " + alimentacion.getCantidadAlimentoKilos() + "kg supera el 3% (" + limiteMaximo + "kg)");
-                throw new RuntimeException("Exceso de ración. El límite máximo permitido es " + limiteMaximo + " kg.");
-            }
+        if (alimentacion.getCantidadAlimentoKilos() > limiteMaximo) {
+            throw new RuntimeException("Exceso de racion. El limite maximo permitido es " + limiteMaximo + " kg.");
+        }
 
+        try {
             return repository.save(alimentacion);
-
-        } catch (Exception e) {
-            log.error("Fallo de comunicación distribuida con ms-biomasa: " + e.getMessage());
-            throw e;
+        } catch (DataAccessException e) {
+            log.error("Error al guardar alimentacion en la base de datos: " + e.getMessage());
+            throw new RuntimeException("No se pudo guardar la alimentacion en la base de datos.");
         }
     }
 }
