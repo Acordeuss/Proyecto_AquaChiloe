@@ -1,0 +1,293 @@
+{
+  "info": {
+    "name": "AquaChiloe - pruebas basicas",
+    "_postman_id": "11111111-2222-3333-4444-aquachiloe",
+    "description": "Coleccion simple para probar los microservicios por medio del Gateway.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "gateway",
+      "value": "http://localhost:8090"
+    }
+  ],
+  "item": [
+    {
+      "name": "Crear jaula",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"codigoJaula\": \"JAULA-01\",\n  \"centroId\": 1,\n  \"activa\": true\n}"
+        },
+        "url": {
+          "raw": "{{gateway}}/gateway/centros/api/v1/centros/jaulas",
+          "host": [
+            "{{gateway}}"
+          ],
+          "path": [
+            "gateway",
+            "centros",
+            "api",
+            "v1",
+            "centros",
+            "jaulas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Verificar jaula",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{gateway}}/gateway/centros/api/v1/centros/jaulas/1/verificar",
+          "host": [
+            "{{gateway}}"
+          ],
+          "path": [
+            "gateway",
+            "centros",
+            "api",
+            "v1",
+            "centros",
+            "jaulas",
+            "1",
+            "verificar"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Crear lote",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"codigoLote\": \"LOTE-01\",\n  \"jaulaId\": 1,\n  \"cantidadPeces\": 1200\n}"
+        },
+        "url": {
+          "raw": "{{gateway}}/gateway/lotes/api/v1/lotes/",
+          "host": [
+            "{{gateway}}"
+          ],
+          "path": [
+            "gateway",
+            "lotes",
+            "api",
+            "v1",
+            "lotes",
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "Crear biomasa",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"jaulaId\": 1,\n  \"especie\": \"Salmon Atlantico\",\n  \"pesoPromedioGramos\": 850\n}"
+        },
+        "url": {
+          "raw": "{{gateway}}/gateway/biomasa/api/v1/biomasa/",
+          "host": [
+            "{{gateway}}"
+          ],
+          "path": [
+            "gateway",
+            "biomasa",
+            "api",
+            "v1",
+            "biomasa",
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "Total biomasa por jaula",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{gateway}}/gateway/biomasa/api/v1/biomasa/total/1",
+          "host": [
+            "{{gateway}}"
+          ],
+          "path": [
+            "gateway",
+            "biomasa",
+            "api",
+            "v1",
+            "biomasa",
+            "total",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Crear alimentacion",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"jaulaId\": 1,\n  \"cantidadAlimentoKilos\": 45\n}"
+        },
+        "url": {
+          "raw": "{{gateway}}/gateway/alimentacion/api/v1/alimentacion/",
+          "host": [
+            "{{gateway}}"
+          ],
+          "path": [
+            "gateway",
+            "alimentacion",
+            "api",
+            "v1",
+            "alimentacion",
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "Crear lectura ambiental",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"centroId\": 1,\n  \"sensorId\": \"SENSOR-01\",\n  \"oxigeno\": 5.2,\n  \"temperatura\": 12.5,\n  \"salinidad\": 30\n}"
+        },
+        "url": {
+          "raw": "{{gateway}}/gateway/ambiental/api/v1/ambiental/lectura",
+          "host": [
+            "{{gateway}}"
+          ],
+          "path": [
+            "gateway",
+            "ambiental",
+            "api",
+            "v1",
+            "ambiental",
+            "lectura"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Ver alerta ambiental",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{gateway}}/gateway/ambiental/api/v1/ambiental/status-critico/1",
+          "host": [
+            "{{gateway}}"
+          ],
+          "path": [
+            "gateway",
+            "ambiental",
+            "api",
+            "v1",
+            "ambiental",
+            "status-critico",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Crear tratamiento sanitario",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"jaulaId\": 1,\n  \"medicamento\": \"Antiparasitario\",\n  \"fechaAplicacion\": \"2026-06-29T10:00:00\",\n  \"diasCarencia\": 14,\n  \"veterinarioResponsable\": \"Dr. Perez\",\n  \"observaciones\": \"Tratamiento preventivo\"\n}"
+        },
+        "url": {
+          "raw": "{{gateway}}/gateway/sanidad/api/v1/sanidad/",
+          "host": [
+            "{{gateway}}"
+          ],
+          "path": [
+            "gateway",
+            "sanidad",
+            "api",
+            "v1",
+            "sanidad",
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "Crear trabajador",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rut\": \"12345678-9\",\n  \"nombre\": \"Juan Soto\",\n  \"turno\": \"Manana\"\n}"
+        },
+        "url": {
+          "raw": "{{gateway}}/gateway/personal/api/v1/personal/",
+          "host": [
+            "{{gateway}}"
+          ],
+          "path": [
+            "gateway",
+            "personal",
+            "api",
+            "v1",
+            "personal",
+            ""
+          ]
+        }
+      }
+    }
+  ]
+}

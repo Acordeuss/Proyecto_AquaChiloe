@@ -1,0 +1,76 @@
+services:
+  ms-centros:
+    build: ./ms-centros/ms-centros
+    container_name: ms-centros
+    ports:
+      - "8080:8080"
+
+  ms-biomasa:
+    build: ./ms-biomasa/ms-biomasa
+    container_name: ms-biomasa
+    ports:
+      - "8081:8081"
+    environment:
+      LOTES_URL: http://ms-lotes:8082
+    depends_on:
+      - ms-lotes
+
+  ms-lotes:
+    build: ./ms-lotes/ms-lotes
+    container_name: ms-lotes
+    ports:
+      - "8082:8082"
+    environment:
+      CENTROS_URL: http://ms-centros:8080
+    depends_on:
+      - ms-centros
+
+  ms-alimentacion:
+    build: ./ms-alimentacion/ms-alimentacion
+    container_name: ms-alimentacion
+    ports:
+      - "8083:8083"
+    environment:
+      BIOMASA_URL: http://ms-biomasa:8081
+    depends_on:
+      - ms-biomasa
+
+  ms-ambiental:
+    build: ./ms-ambiental/ms-ambiental
+    container_name: ms-ambiental
+    ports:
+      - "8084:8084"
+
+  ms-sanidad:
+    build: ./ms-sanidad/ms-sanidad
+    container_name: ms-sanidad
+    ports:
+      - "8085:8085"
+
+  ms-personal:
+    build: ./ms-personal/ms-personal
+    container_name: ms-personal
+    ports:
+      - "8086:8086"
+
+  ms-gateway:
+    build: ./ms-gateway
+    container_name: ms-gateway
+    ports:
+      - "8090:8090"
+    environment:
+      CENTROS_URL: http://ms-centros:8080
+      BIOMASA_URL: http://ms-biomasa:8081
+      LOTES_URL: http://ms-lotes:8082
+      ALIMENTACION_URL: http://ms-alimentacion:8083
+      AMBIENTAL_URL: http://ms-ambiental:8084
+      SANIDAD_URL: http://ms-sanidad:8085
+      PERSONAL_URL: http://ms-personal:8086
+    depends_on:
+      - ms-centros
+      - ms-biomasa
+      - ms-lotes
+      - ms-alimentacion
+      - ms-ambiental
+      - ms-sanidad
+      - ms-personal
