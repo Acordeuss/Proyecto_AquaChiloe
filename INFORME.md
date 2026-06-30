@@ -81,6 +81,14 @@ Cada microservicio tiene su propio `Dockerfile`. Para levantar todo:
 docker compose up --build
 ```
 
+Si Docker no esta instalado, el proyecto tambien se puede ejecutar con Maven:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\ejecutar-sin-docker.ps1
+```
+
+Este script abre una ventana por cada microservicio y permite probar igual el Gateway, Swagger y Postman.
+
 El Gateway usa archivo YAML para sus propiedades principales:
 
 ```text
@@ -93,4 +101,4 @@ Se agrego `render.yaml` para desplegar `ms-ambiental` en Render. El despliegue f
 
 ## 11. Conclusiones
 
-El proyecto cumple con una estructura basica de microservicios: separacion por responsabilidades, documentacion Swagger, pruebas, base de datos por servicio, comunicacion HTTP, coleccion Postman, script SQL y despliegue local con Docker.
+El proyecto cumple con una estructura basica de microservicios: separacion por responsabilidades, documentacion Swagger, pruebas, base de datos por servicio, comunicacion HTTP, coleccion Postman, script SQL y ejecucion local con o sin Docker.

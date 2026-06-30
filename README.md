@@ -29,6 +29,41 @@ Para detener:
 docker compose down
 ```
 
+## Ejecutar sin Docker
+
+Si el computador no tiene Docker instalado, el proyecto tambien se puede ejecutar con Maven.
+
+Desde la carpeta `Proyecto_AquaChiloe`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\ejecutar-sin-docker.ps1
+```
+
+Ese script abre una ventana por cada microservicio y deja el Gateway en:
+
+```text
+http://localhost:8090
+```
+
+Tambien se puede hacer manualmente abriendo una terminal por servicio:
+
+```powershell
+cd ms-centros\ms-centros
+.\mvnw.cmd spring-boot:run
+```
+
+Despues repetir lo mismo para:
+
+```text
+ms-lotes\ms-lotes
+ms-biomasa\ms-biomasa
+ms-alimentacion\ms-alimentacion
+ms-ambiental\ms-ambiental
+ms-sanidad\ms-sanidad
+ms-personal\ms-personal
+ms-gateway
+```
+
 ## Swagger
 
 Cada microservicio tiene Swagger habilitado:
@@ -106,7 +141,7 @@ Para usarla:
 
 1. Abrir Postman.
 2. Importar el archivo JSON.
-3. Levantar el proyecto con `docker compose up --build`.
+3. Levantar el proyecto con Docker o con `.\scripts\ejecutar-sin-docker.ps1`.
 4. Ejecutar las peticiones en orden, empezando por crear jaula.
 
 ## Pruebas y cobertura
