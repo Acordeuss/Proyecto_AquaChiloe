@@ -1,5 +1,9 @@
 package com.example.ms_gateway.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -45,7 +49,14 @@ public class GatewayController {
     }
 
     @RequestMapping("/{servicio}/**")
+    @Operation(summary = "Reenviar peticion a microservicio", description = "Centraliza las rutas bajo /gateway/{servicio}/** y reenvia la peticion al microservicio correspondiente.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Respuesta entregada por el microservicio destino"),
+            @ApiResponse(responseCode = "404", description = "Servicio no registrado en el gateway"),
+            @ApiResponse(responseCode = "503", description = "Microservicio destino no disponible")
+    })
     public ResponseEntity<String> reenviar(
+            @Parameter(description = "Nombre del microservicio: centros, biomasa, lotes, alimentacion, ambiental, sanidad o personal")
             @PathVariable String servicio,
             HttpServletRequest request,
             @RequestBody(required = false) String body) {

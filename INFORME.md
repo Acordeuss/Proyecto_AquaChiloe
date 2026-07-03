@@ -47,6 +47,8 @@ Cada microservicio tiene Swagger/OpenAPI habilitado en:
 /api-docs
 ```
 
+Ademas, los controladores principales incluyen anotaciones OpenAPI para documentar resumen, descripcion, parametros y codigos de respuesta.
+
 ## 6. Pruebas
 
 Se usan pruebas con JUnit. Tambien se agrego JaCoCo para generar reportes de cobertura.
@@ -62,6 +64,28 @@ Reporte:
 ```text
 target/site/jacoco/index.html
 ```
+
+Cobertura actual por microservicio:
+
+| Microservicio | Cobertura |
+| --- | ---: |
+| ms-centros | 94.59% |
+| ms-biomasa | 92.86% |
+| ms-lotes | 94.09% |
+| ms-alimentacion | 93.60% |
+| ms-ambiental | 91.05% |
+| ms-sanidad | 90.34% |
+| ms-personal | 85.06% |
+| ms-gateway | 85.71% |
+
+Las pruebas cubren:
+
+- Registro y consulta de datos en servicios.
+- Ramas de error por fallas de base de datos.
+- Ramas de error por comunicacion HTTP entre microservicios.
+- Controladores REST.
+- Configuracion OpenAPI.
+- Manejadores globales de excepciones.
 
 ## 7. Postman
 
@@ -99,6 +123,17 @@ ms-gateway/src/main/resources/application.yml
 
 Se agrego `render.yaml` para desplegar `ms-ambiental` en Render. El despliegue final depende de subir el proyecto a GitHub y conectarlo con Render.
 
+La evidencia esperada en defensa es:
+
+- Archivo `render.yaml` en la raiz del repositorio.
+- Dockerfile de `ms-ambiental`.
+- Servicio creado en Render.
+- URL publica funcionando, idealmente mostrando `/swagger-ui.html`.
+
+## 10.1 Gestion del trabajo
+
+El README incluye una lista de tareas equivalente al tablero ClickUp. Para cerrar completamente el checkpoint de gestion, se debe mostrar el tablero real de ClickUp con responsables asignados, columnas de avance y tareas asociadas a Docker, Swagger, Gateway, pruebas, documentacion y Render.
+
 ## 11. Conclusiones
 
-El proyecto cumple con una estructura basica de microservicios: separacion por responsabilidades, documentacion Swagger, pruebas, base de datos por servicio, comunicacion HTTP, coleccion Postman, script SQL y ejecucion local con o sin Docker.
+El proyecto cumple con una estructura de microservicios: separacion por responsabilidades, documentacion Swagger, pruebas con cobertura superior al 80% por microservicio, base de datos por servicio, comunicacion HTTP, coleccion Postman, script SQL y ejecucion local con o sin Docker.

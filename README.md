@@ -146,7 +146,7 @@ Para usarla:
 
 ## Pruebas y cobertura
 
-Cada microservicio tiene pruebas con JUnit y reportes JaCoCo.
+Cada microservicio tiene pruebas con JUnit y reportes JaCoCo. Las pruebas cubren controladores, servicios, configuracion OpenAPI, manejo de errores y ramas de comunicacion entre microservicios.
 
 Ejecutar en un microservicio:
 
@@ -166,6 +166,19 @@ Reporte:
 target/site/jacoco/index.html
 ```
 
+Cobertura JaCoCo actual:
+
+| Microservicio | Cobertura de instrucciones |
+| --- | ---: |
+| ms-centros | 94.59% |
+| ms-biomasa | 92.86% |
+| ms-lotes | 94.09% |
+| ms-alimentacion | 93.60% |
+| ms-ambiental | 91.05% |
+| ms-sanidad | 90.34% |
+| ms-personal | 85.06% |
+| ms-gateway | 85.71% |
+
 ## Render
 
 Se dejo un archivo `render.yaml` para desplegar `ms-ambiental` como servicio web en Render.
@@ -177,6 +190,20 @@ Pasos generales:
 3. Seleccionar el repositorio.
 4. Render usara `render.yaml`.
 5. Revisar la URL publica generada.
+
+Evidencia para la defensa:
+
+```text
+render.yaml
+ms-ambiental/ms-ambiental/Dockerfile
+URL publica generada por Render
+```
+
+Endpoint sugerido para verificar en Render:
+
+```text
+https://URL-DE-RENDER/swagger-ui.html
+```
 
 ## GitHub Flow usado
 
@@ -195,7 +222,7 @@ Cada funcionalidad se puede subir con Pull Request hacia `main`.
 
 ## ClickUp
 
-Tareas sugeridas para el tablero:
+Tareas sugeridas para el tablero ClickUp:
 
 | Tarea | Estado |
 | --- | --- |
@@ -208,3 +235,13 @@ Tareas sugeridas para el tablero:
 | Agregar script SQL | Listo |
 | Crear README e informe | Listo |
 | Desplegar un microservicio en Render | Pendiente de cuenta Render |
+
+Para cumplir el checkpoint en la defensa, mostrar el tablero real de ClickUp con estas columnas:
+
+```text
+Pendiente
+En progreso
+Listo
+```
+
+Y con responsables asignados por tarea.
